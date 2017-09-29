@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/local/perl/bin
 use strict;
 use warnings;
 
@@ -270,10 +270,10 @@ sub index_single_file
 sub usage
 {
 	print "
-usage: indexer.pl [-htwp] files
+usage: indexer [-htwp] files
 	-h : help
 	-t : timeout in seconds
-	-w : number of workers [not implemented]
+	-w : number of workers [not yet implemented]
 	-b : blob mode - index from standard input\n\n";
 	exit 0;
 }
@@ -293,11 +293,11 @@ my $config = {
 my %options;
 getopts("ht:w:b", \%options) || usage();
 
-
 if (defined($options{'h'})) {
 	usage();
 }
 
+# set the timeout - verify it's an number
 if (defined($options{'t'})) {
 	$config->{'timeout'} = $options{'t'};
 	if ($config->{'timeout'} =~ /\D/) {
@@ -310,7 +310,6 @@ if (defined($options{'t'})) {
 if (!defined($options{'b'})) {
 	@files = @ARGV;
 }
-
 
 # option setup is finished; initialize the index db and start indexing
 my ($dbfile) = init_db();

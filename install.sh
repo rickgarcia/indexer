@@ -26,4 +26,15 @@ while true; do
 done
 
 
+# run install to local ~/bin
+TARGET=~/bin
+if [ ! -e ~/bin ]; then
+	mkdir ~/bin
+fi
+
+echo "#!$PERL" > ~/bin/indexer
+tail -n +2 indexer.pl >> ~/bin/indexer
+chmod 755 ~/bin/indexer
+
+echo "Installed indexer to ~/bin"
 

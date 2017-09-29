@@ -1,0 +1,41 @@
+	The indexer is a script/command that takes either a list of files 
+to index, or can accept text input over stdin.
+
+Text Blob input (stdin):
+	> cat file.txt | indexer -b
+
+File list:
+	> indexer file1.txt file2.txt file3.txt ...
+
+	The indexer will launch a subprocess for each file; the full word
+counts are stored in a local sqlite3 database. Upon completion of indexing
+a file, a process will update the counts in the temporary db. Each process
+runs it's index updates transactionally, so as to prevent lock errors and
+data corruption. Upon completion of the indexing, the parent process will 
+print out the final counts, and delete the temporary db.
+	The indexer has a default timeout of 60 seconds - after the timeout
+has been reached, the parent process will kill any unfinished child indexers
+and proceed to output the counts that finished within the specified window.
+
+	The install.sh bash script does some initial checking to ensure that
+the sqlite dependencies are installed, and attempts to perform basic setup.
+
+TODOs:
+	- limit the number of child processes (workers) active at a single time
+	- enable filtering for common words (eg. "the" "and" "I" "a"...)
+	- enable input over network
+
+Test Data
+	The test_data/ directory is currently populated by a set of files 
+scraped from the Gutenberg Project. Non-standard ascii has been removed as 
+much as possible for simplicity
+
+SQLite
+	The db is an extremely basic db layout - it consists of two tables; 
+one for each word with the respective occurance counts, and a table of files 
+indexed, with completion times. The db is not meant ot be persistent, but 
+the application can be easily altered to allow persistence for additional 
+files to the index; however, there is no easy way to prevent duplicate entries 
+(ie, the same file being read twice) from skewing the word counts.
+
+

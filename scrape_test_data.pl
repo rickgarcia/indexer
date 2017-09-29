@@ -2,6 +2,10 @@
 # Quick script to pull book texts from Project Gutenberg; scraped from top
 # 100 book as listed at:
 # https://www.gutenberg.org/browse/scores/top
+#
+# usage: perl scrape_test_data.pl
+# - will create the directory test_data if it doesn't already exist
+#
 
 use strict;
 use warnings;
@@ -109,6 +113,10 @@ my $books = {
 	'14264' => 'The Practice and Science of Drawing by Harold Speed',
 	'512' => 'Mosses from an Old Manse, and Other Stories by Nathaniel Hawthorne'
 };
+
+if (!(-e 'test_data' && -d 'test_data')) {
+	mkdir 'test_data';
+}
 
 foreach my $book_id (keys %$books) {
 
